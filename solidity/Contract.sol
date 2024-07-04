@@ -43,3 +43,13 @@ contract Contract {
 	Foods public food3 = Foods.Bagel;
 	Foods public food4 = Foods.Banana;
 }
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Contract {
+    uint public x;
+    constructor(uint _x){
+        x = _x;
+    }
+
+}
