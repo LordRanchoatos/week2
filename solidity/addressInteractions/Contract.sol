@@ -45,3 +45,34 @@ contract Contract {
     }
     
 }
+
+//sending from the contract using the this keyword:
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+import "forge-std/console.sol";
+
+contract Contract {
+    address public owner;
+    address public charity;
+    constructor(address _charity){
+        owner = msg.sender;
+        charity = _charity;
+    }
+
+    fallback() external payable {
+
+    }
+
+    function tip() public payable {
+        (bool s, ) = owner.call{ value: msg.value }("");
+        require(s);
+    }
+
+    function donate() public payable{
+        console.log( address(this) );
+        console.log( address(this).balance );
+        (bool success, ) = charity.call{value: address(this).balance}("");
+        require(success);
+    }
+    
+}
