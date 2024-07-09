@@ -118,3 +118,5 @@ class Trie {
 }
 
 module.exports = Trie;
+
+// week2 assignment done
