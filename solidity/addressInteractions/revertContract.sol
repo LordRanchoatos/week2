@@ -26,3 +26,38 @@ contract Contract {
 		payable(msg.sender).transfer(address(this).balance);
 	}
 }
+
+// FUNCTION MODIFIER
+// Update the onlyOwner modifier to require that only the owner address can call these functions without reverting.
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Contract {
+	uint configA;
+	uint configB;
+	uint configC;
+	address owner;
+
+	constructor() {
+		owner = msg.sender;
+	}
+
+	function setA(uint _configA) public onlyOwner {
+		configA = _configA;
+	}
+
+	function setB(uint _configB) public onlyOwner {
+		configB = _configB;
+	}
+
+	function setC(uint _configC) public onlyOwner {
+		configC = _configC;
+	}
+
+	modifier onlyOwner {
+		require(msg.sender == owner);
+		// underscore runs the function body
+		_;
+	}
+}
