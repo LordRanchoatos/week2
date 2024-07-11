@@ -13,6 +13,7 @@ contract Escrow {
 	}
 
 	function approve() external {
+		require(msg.sender == arbiter);
 		(bool success, ) = beneficiary.call{ value: address(this).balance }("");
 		require(success);
 	}
