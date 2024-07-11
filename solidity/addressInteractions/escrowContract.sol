@@ -5,5 +5,11 @@ contract Escrow {
     address public depositor;
     address public beneficiary;
     address public arbiter;
+
+    constructor(address a, address b){
+        arbiter = a;
+        beneficiary = b;
+        depositor = msg.sender;
+    }
     
 }
