@@ -66,3 +66,23 @@ async function getNonce(address) {
 }
 
 module.exports = getNonce;
+
+async function getTotalTransactions(blockNumber) {
+    const response = await axios.post(url, {
+        jsonrpc: "2.0",
+        id: 1,
+        method: "eth_getBlockByNumber",
+        params: [
+            blockNumber,
+            true
+        ], 
+    });
+    
+    // use this if you want to inspect the response data!
+    console.log(response.data);
+
+    // return the total number of transactions in the block
+    return response.data.result.transactions.length
+}
+
+module.exports = getTotalTransactions;
