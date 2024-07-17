@@ -99,4 +99,77 @@ contract Contract {
 
 //Note: js array method like reduce doesn't work for this purpose because array in solidity doesn't have access to this methiod.
 
+// Dynamically Sized Arrays
+// We can also create arrays in Solidity where the size is unknown at compile-time. These arrays are said to have dynamic size.
 
+// For example:
+
+// import "forge-std/console.sol";
+// contract Contract {
+//     function logFriends(address[] calldata friends) external view {
+//         for(uint i = 0; i < friends.length; i++) {
+//             console.log(friends[i]);
+//         }
+//     }
+// }
+// ☝️ Here we are able to log each address that is sent to the logFriends function.
+
+// We use the length member available on the array to determine the number of elements 
+// inside the dynamic sized array and then we use number indexes to retrieve the address.
+
+
+// Sum Dynamic Array
+// Create a pure, external function sum which takes a dynamic size array of unsigned integers.
+// Find the sum of the unsigned integers and return it as a uint.
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+contract Contract {
+    function sum(uint[] calldata numbers) external returns(uint total) {
+        for(uint i =0; i < numbers.length; i++){
+            total += numbers[i];
+        }
+
+    }
+    
+}
+
+// Storage Arrays
+// With arrays in storage you can use the push member function to add a new element at the end.
+
+// import "forge-std/console.sol";
+// contract Contract {
+// 	uint[] public numbers;
+
+//     constructor() {
+// 		numbers.push(3);
+// 		console.log(numbers.length); // 1
+// 		numbers.push(4);
+// 		console.log(numbers.length); // 2
+// 		console.log(numbers[0]); // 3
+// 		console.log(numbers[1]); // 4
+//     }
+// }
+// ☝️ As you might expect the length member adjusts when new elements are pushed onto the end of the array.
+
+// 🏁 Your Goal: Filter Even Numbers
+// Create a public, dynamic sized array of unsigned integers as a state variable called evenNumbers.
+// Create an external function called filterEven which takes an dynamic size array of unsigned integers as its only argument. 
+// Find all of the even numbers in this array and push them into the evenNumbers storage array.
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+contract Contract {
+    uint[] public evenNumbers;
+
+    function filterEven(uint[] calldata numbers) external {
+        for(uint i = 0; i < numbers.length; i++){
+            if(numbers[i]%2 == 0){
+                evenNumbers.push(numbers[i]);
+            }
+        }
+    }
+    
+}
