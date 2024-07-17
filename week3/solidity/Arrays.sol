@@ -173,3 +173,86 @@ contract Contract {
     }
     
 }
+
+// memory arrays
+// Unlike storage arrays, memory arrays do not have a push member function.
+
+// Memory arrays can have a dynamic size if the size is provided during initialization.
+
+// For example:
+
+// import "forge-std/console.sol";
+// contract Contract {
+// 	uint x = 5;
+
+// 	function createArray() view external {
+// 		address[] memory addresses = new address[](x);
+// 		console.log( addresses.length ); // 5
+// 	}
+// }
+
+// ☝️ The size is dynamically provided by the variable x. We could potentially change this variable and it would create an array of
+// addresses of that size. Notice the use of the new operator here during initialization!
+
+// After initialization, memory arrays cannot be resized. This means even in the example above, 
+// once the addresses array is initialized at size 5, it will stay that length for the entirety of the transaction.
+
+// Filter Numbers over 5 in Memory
+// Let's say we wanted to filter numbers over 5 in memory:
+
+contract Contract {
+	function filter(uint[] calldata numbers) 
+        external 
+        pure 
+        returns(uint[] memory) 
+    {
+        // find the number of elements over 5
+		uint elements;
+		for(uint i = 0; i < numbers.length; i++) {
+			if(numbers[i] > 5) {
+                elements++;
+            }
+		}
+
+        // create a new array with this size
+		uint[] memory filtered = new uint[](elements);
+        // keep an index for the positions we have filled
+		uint filledIndex = 0;
+		for(uint i = 0; i < numbers.length; i++) {
+			if(numbers[i] > 5) {
+				filtered[filledIndex] = numbers[i];
+				filledIndex++;
+			}
+		}
+		return filtered;
+	}
+}
+// ☝️ This is quite a bit tougher to do without the push member function.
+// We need to first find the number of elements over 5 in the passed-in array so that we can initialize the return array at that size.
+
+// Now you won't take dynamically resized arrays for granted! 😅
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+contract Contract {
+    function filterEven(uint[] calldata numbers) external pure returns(uint[] memory){
+    uint elements;
+    for (uint i = 0; i < numbers.length; i++){
+            if (numbers[i]%2 == 0){
+                elements++;
+            }
+        }
+
+        uint[] memory evenNumbers = new uint[](elements);
+        uint currentIndex = 0;
+        for (uint i = 0; i < numbers.length; i++){
+            if (numbers[i]%2 == 0){
+                evenNumbers[currentIndex] = numbers[i];
+                currentIndex++;
+            }
+        }
+        return evenNumbers;
+    }
+}
+
