@@ -119,3 +119,90 @@ contract Contract {
 		vote = Vote(choice, msg.sender);
 	}
 }
+
+// Returning Structs
+// When you're returning structs or other reference types like arrays, 
+// you have to clarify where the data is coming from using data location keywords: storage, memory, or calldata.
+
+// However, for external and public methods, you can't use the storage keyword for the return parameter. 
+// The storage keyword would provide a direct reference to a location within the contract's own persistent storage, which cannot be accessed outside of the contract. Use memory or calldata instead to return a copy of the data.
+
+// Let's take a look at an example of a struct being returned in memory:
+
+// struct Hero { uint health }
+
+// function postHero(Hero hero) external {
+//     // take a Hero type as an external argument
+//     console.log(hero.health); // 100
+// }
+
+// function getHero() external view returns (Hero memory) {
+//     // return Hero in an external function
+//     return Hero(100);
+// }
+// 🏁 Your Goal: Return Memory Vote
+// Create an external, view function called createVote which takes Choices value as a parameter 
+// and returns an instance of type Vote.
+// This function should use the Choices value and the msg.sender as the values to create the vote.
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+contract Contract {
+	enum Choices { Yes, No }
+
+	struct Vote {
+		Choices choice;
+		address voter;
+	}
+	
+	// TODO: make a new createVote function
+	function createVote(Choices choices) external view returns(Vote memory){
+		return Vote(choices, msg.sender);
+	}
+}
+
+// Struct Arrays
+// We can create an array of struct types, just like we would with any other data type!
+
+// // a dynamic size list of uints
+// uint[] numbers;
+
+// struct Account {
+//     uint id;
+//     uint balance;
+// }
+// // a dynamic size list of Accounts
+// Account[] accounts;
+// We can also push and retrieve accounts like any other storage array:
+
+// accounts.push(Account(0, 100));
+
+// console.log(accounts[0].id); // 0
+// console.log(accounts[0].balance); // 100
+// ☝️ Of course, push only works on storage arrays, as we learned in the lesson on arrays!
+
+// 🏁 Your Goal: Vote Array
+// Create a public storage array of the Vote struct called votes.
+// In the createVote function use the choice parameter and the msg.sender 
+// to create a new vote and push it onto the array of votes.
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+contract Contract {
+	enum Choices { Yes, No }
+	
+	struct Vote {
+		Choices choice;
+		address voter;
+	}
+	
+	// TODO: create a public state variable: an array of votes
+	Vote[] public votes;
+
+	function createVote(Choices choice) external {
+		// TODO: add a new vote to the array of votes state variable
+		votes.push(Vote(choice, msg.sender));
+	}
+}
