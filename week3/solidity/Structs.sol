@@ -206,3 +206,72 @@ contract Contract {
 		votes.push(Vote(choice, msg.sender));
 	}
 }
+
+// Accessing Struct Properties
+// It's time to access some of the struct properties we stored! 
+// You can do this using the . operator. Let's see a few examples:
+
+// import "forge-std/console.sol";
+// contract X {
+//   struct Human {
+//     string name;
+//     uint age;
+//   }
+//   Human human = Human("Dan", 33);
+//   Human[] humans; 
+
+//   constructor() {
+//     humans.push(human);
+
+//     // read from this struct directly 
+//     console.log(human.name); // Dan
+
+//     // read from the array of humans
+//     console.log(humans[0].age); // 33
+//   }
+// }
+
+
+// 🏁 Your Goal: Find Vote
+// Create an external, view function hasVoted which takes an address and returns a bool 
+// indicating if the address has cast a vote or not.
+// Create an external, view function findChoice which takes an address and returns a 
+// Choices value indicating the choice on the vote cast by the address. 
+// For this function there is no need to worry about the case where a vote was not cast.
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+contract Contract {
+	enum Choices { Yes, No }
+	
+	struct Vote {
+		Choices choice;
+		address voter;
+	}
+
+	Vote none = Vote(Choices(0), address(0));
+
+	Vote[] public votes; 
+
+	function createVote(Choices choice) external {
+		votes.push(Vote(choice, msg.sender));
+	}
+
+	function findVote(address voter) internal view returns(Vote storage) {
+		for(uint i = 0; i < votes.length; i++) {
+			if(votes[i].voter == voter) {
+				return votes[i];
+			}
+		}
+		return none;
+	}
+
+	function hasVoted(address voter) public view returns(bool) {
+		return findVote(voter).voter == voter;
+	}
+
+	function findChoice(address voter) external view returns(Choices) {
+		return findVote(voter).choice;
+	}
+}
