@@ -367,3 +367,5 @@ contract Contract {
 		return findVote(voter).choice;
 	}
 }
+
+//Mapping
