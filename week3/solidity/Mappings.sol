@@ -129,3 +129,72 @@ contract Contract {
     }
     
 }
+
+// Mapping Retrieval
+// Compared to arrays retrieving a value from a mapping is quite simple!
+
+// Consider:
+
+// mapping(address => bool) students;
+
+// function isStudent(address addr) external view returns(bool) {
+//     return students[addr];
+// }
+// Versus:
+
+// address[] students;
+
+// function isStudent(address addr) external view returns(bool) {
+//     for(uint i = 0; i < students.length; i++) {
+//         if(students[i] === addr) {
+//             return true;
+//         }
+//     }
+//     return false;
+// }
+// ☝️ To find if the student address is in the array we have to iterate over the array. 
+// For the mapping we can simply plug in the address.
+
+// ⛽ Choosing the right data structure is half the battle. 
+// It can help keep the code clean and use less gas!
+
+// 🔍 Curious how the value lookup for the mapping works under the hood? 
+// Let's take a look in details.
+
+// 🏁 Your Goal: Is Member
+// Create an external, view function called isMember 
+// which takes an address and returns a bool indicating whether or not the address is a member.
+
+// The location of a value inside a mapping depends on two things:
+
+// The variable position inside of the contract
+// The mapping key to find the value
+// The variable position is determined by where in the contract the mapping is defined:
+
+// contract Contract {
+//     mapping(address => uint) balances;
+// }
+// ☝️ In this example balances would be in storage slot 0 since it's the first variable. If there were a uint declared above it, it would be in storage slot 1.
+
+// The mapping key will be the address for the balance we're trying to find. We can take the variable position and the mapping key and hash them together:
+
+// keccak256(mappingKey + variablePosition);
+// ☝️ This will result in a hash we can use to find the value stored by the mapping key. 
+// If we needed to, we could use the sload method in assembly to do a 
+// direct storage load at this location, retrieving the balance.
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Contract {
+    mapping(address => bool) public members;
+
+    function addMember(address _address) external {
+        members[_address] = true;
+    }
+
+    function isMember(address _address) external view returns(bool) {
+        return members[_address];
+    }
+    
+}
