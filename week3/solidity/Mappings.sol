@@ -336,3 +336,61 @@ contract Contract {
 	}
 
 }
+
+// Nested Mappings
+// As shown in the previous stage, we can provide more complex types in our mapping values.
+
+// Last stage we showed it with structs, now let's try it with other mappings!
+
+// mapping(uint => mapping(address => bool)) voteToAddressChoice;
+
+// function getVote(uint _id, address _addr) 
+//     external
+//     view 
+//     returns(bool)
+// {
+//     return voteToAddressChoice[_id][_addr];
+// } 
+// ☝️ In this scenario each vote id points to a mapping of addresses to bool votes. This allows each address to register a different vote with each vote id.
+
+// As a voter we might call a function with an id to register our choice:
+
+// function registerVote(uint _id, bool _choice) external {
+//     voteToAddressChoice[_id][msg.sender] = _choice;
+// }
+// Let's say there were 3 votes with the ids: 212, 72 and 409.
+
+// We could make the following calls from external the contract:
+
+// // for true for vote id 212
+// votingContract.registerVote(212, true);
+// // for false for vote id 72
+// votingContract.registerVote(72, false);
+// // for true for vote id 409
+// votingContract.registerVote(409, true);
+// ☝️ This would register a true for the ids 212 and 409 at our address. For 72 it would register false.
+
+// 📖 Of course, the default value for a bool is false, so this second vote may be pointless unless we were to add in some other way to provide an non-existent vote.
+
+// 🏁 Your Goal: Make Connections
+// Create a public mapping called connections which will map an address to a mapping of an address to a ConnectionTypes enum value.
+// In theconnectWith function, create a connection from the msg.sender to the other address.
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Contract {
+	enum ConnectionTypes { 
+		Unacquainted,
+		Friend,
+		Family
+	}
+	
+	// TODO: create a public nested mapping `connections` 
+	mapping(address => mapping(address => ConnectionTypes)) public connections;
+
+	function connectWith(address other, ConnectionTypes connectionType) external {
+        // TODO: make the connection from msg.sender => other => connectionType
+		connections[msg.sender][other] = connectionType;
+	}
+}
