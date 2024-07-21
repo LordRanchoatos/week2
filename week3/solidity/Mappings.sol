@@ -296,3 +296,43 @@ contract Contract {
 	}
 
 }
+
+// Types of Balances
+// Broadly speaking, smart contracts deal with two type of value transfers:
+
+// the native currency (ether), which is stored and transferred using the native EVM mechanisms, the value in the message call, and the balance on an address
+// a storage value which can represent any kind of value on-chain, and is updated by modifying storage variables
+// In the smart contract you are building, you are maintaining your own balances in the User struct that has no relation to ether. This means, to transfer balances from one user to another, you can just update the struct value!
+
+// 🏁 Your Goal: Transfer Amount
+// Create an external function called transfer which takes two parameters: an address for the recipient and a uint for the amount.
+// In this function, transfer the amount specified from the balance of the msg.sender to the balance of the recipient address.
+// 🔒 Contract Security
+// Ensure that both addresses used in the transfer function have active users.
+// Ensure that the msg.sender has enough in their balance to make the transfer without going into a negative balance.
+// If either of these conditions aren't satisfied, revert the call.
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Contract {
+	struct User {
+		uint balance;
+		bool isActive;
+	}
+
+	mapping(address => User) public users;
+	
+	function createUser() external {
+		require(!users[msg.sender].isActive);
+		users[msg.sender] = User(100, true);
+	}
+
+	function transfer(address _address, uint _amount) external {
+		require(users[msg.sender].isActive && users[_address].isActive);
+		require(users[msg.sender].balance >= _amount);
+		users[msg.sender].balance -= _amount;
+		users[_address].balance += _amount;
+	}
+
+}
