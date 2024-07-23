@@ -184,3 +184,100 @@ contract Mage is Hero(50) {
         enemy.takeAttack(Hero.AttackTypes.Spell);
     }
 }
+
+// Super Call
+// In the last stage we wrote an override function for an unimplemented function on the base contract.
+
+// In other cases, the base contract will have functionality in its virtual functions 
+// that we want to share with our derived contracts. That's when it's time to use super.
+
+// contract Base {
+// 	uint public value = 10;
+
+// 	function modify() virtual external {
+// 		value *= 2;
+// 	}
+// }
+
+// contract Derived is Base {
+// 	function modify() virtual override external {
+// 		value += 20;
+//         super.modify(); // results in value = 60
+//         // Base.modify() would also work!
+// 	}
+// }
+// ☝️ You can see in our Derived contract we are modifying the value and then calling super.modify to 
+// invoke the function on the base contract as well. 
+// This will first perform value += 20 from the override function, 
+// then perform value *= 2 from the super function, resulting in value=60.
+
+// With arguments this works like any other function: we would pass through arguments to super.modify().
+
+// 🏁 Your Goal: Add the Super!
+// The attack function is now implemented by the Hero base contract. 
+// It will take the enemy as an argument and decrement energy from our hero after every attack.
+
+// Let's invoke this base contract function from within the attack 
+// function for both (derived) hero contracts: Mage and Warrior.
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+import "./Hero.sol";
+
+contract Warrior is Hero(200) { 
+    function attack(Enemy enemy) public override {
+        enemy.takeAttack(Hero.AttackTypes.Brawl);
+        Hero.attack(enemy);
+    }
+}
+
+contract Mage is Hero(50) { 
+    function attack(Enemy enemy) public override {
+        enemy.takeAttack(Hero.AttackTypes.Spell);
+        super.attack(enemy);
+    }
+}
+
+
+// Base Utility Contracts
+// It is often quite useful for a base contract to provide utility functions and modifiers.
+
+// Let's see an example:
+
+// contract Depositable {
+//     modifier requiresDeposit {
+//         require(msg.value >= 1 ether);
+//         _;
+//     }
+// }
+
+// contract Escrow is Depositable {
+//     address owner;
+//     constructor() requiresDeposit {
+//         owner = msg.sender;
+//     }
+// }
+// ☝️ Here the Escrow contract requires a deposit of at least 1 ether in order to deploy. Otherwise the transaction will revert.
+
+// This requirement comes from the base contract Depositable and is used through the inherited requiresDeposit modifier.
+
+// 🏁 Your Goal: Only Owner
+// On the Collectible.sol tab you'll see that Collectible contract inherits from the Ownable contract.
+
+// Your goal is to fill out the Ownable base contract, which will be used by the Collectible contract!
+// The owner should be defined in the Ownable base contract
+// Ensure that markPrice can only be called by the owner (the deployer of the collectible)
+// 💡 HINT: The markPrice function uses an onlyOwner modifier which is currently not implemented anywhere!
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+contract Ownable {
+    constructor() { owner = msg.sender; }
+    address owner;
+	modifier onlyOwner {
+		require(msg.sender == owner);
+		_;
+	}
+}
