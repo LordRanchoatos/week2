@@ -281,3 +281,72 @@ contract Ownable {
 		_;
 	}
 }
+
+
+// Multiple Inheritance
+// It's possible to inherit from multiple contracts.
+
+// The derived contract will inherit state variables and functions from each base contract:
+
+// contract Base1 {
+//     uint a = 5;
+// }
+// contract Base2  {
+//     uint b = 10;
+// }
+// contract Derived is Base1, Base2 {
+//     // has access to both b and a!
+// }
+// ☝️ You can see we specify the contracts to inherit from in a comma-separated list. The Derived contract is inheriting from both Base1 and Base2.
+
+// 🔍 When it comes to multiple inheritance, order matters! Let's take a closer look in details.
+
+// 🏁 Your Goal: Collectible Transferable 💫
+// The Collectible contract now also inherits from Transferable, a contract which has not been created yet!
+
+// Your goal is to create a new contract Transferable that will allow the Collectible to transfer its ownership to another address.
+// In the Transferable contract, create a function called transfer which takes an address for the new owner.
+// Have this function transfer ownership from the current owner to the new owner passed in.
+// Ensure that this function can only be called by the current owner.
+
+// Multiple Inheritance Order
+// When inheriting from contracts, the most base contract should be furthest left in the comma-separated list.
+
+// For example:
+
+// contract Base {
+
+// }
+
+// contract Middle is Base {
+
+// }
+
+// contract Top is Base, Middle {
+
+// }
+// ☝️ The important part here is that Top inherits from Base and Middle, in that order. Since Middle inherits from Base, this will not resolve if this order were reversed.
+
+// In this code stage, we can see that Collectible is inheriting from both Ownable and Transferable in this order. Based on the order, Transferable can inherit from Ownable, but not vice-versa.
+
+// In this code stage, it makes sense for Transferable to inherit from Ownable which is why these contracts were specified in this order.
+
+// 🏆 You are more than welcome to test this out! If you try making Ownable inherit from Transferable, the compiler will complain with a pretty scary looking error: “Linearization of inheritance graph impossible”. You can see more details on this in the Solidity Docs.
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+contract Ownable {
+    constructor() { owner = msg.sender; }
+    address owner;
+	modifier onlyOwner {
+		require(msg.sender == owner);
+		_;
+	}
+}
+
+contract Transferable is Ownable {
+	function transfer(address newOwner) external onlyOwner {
+		owner = newOwner;
+	}
+}
