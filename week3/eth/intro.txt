@@ -1,1 +1,18 @@
 Intro to Ethereum Transactions
+
+In the previous section, we learned about the basic structure and syntax of [JSON-RPC](https://www.jsonrpc.org/) requests and how they are used to invoke methods on a remote server and receive a response. We mainly looked at read-only queries including methods:
+eth_getBlockByNumber: returns information about a block by number
+eth_getBalance: returns the balance of the provider Ethereum address
+eth_blockNumber: returns the number of the most recent block
+Remember that JSON-RPC has nothing to do with blockchains or crypto. It is just another typical API standard, like REST.
+
+These are read-only methods, meaning, we are only requesting data from the Ethereum blockchain. In this section, we look at signed JSON-RPC requests, so that we may also do write-queries to the Ethereum computer via transactions.
+
+Intro
+We learned that Ethereum nodes contain a JSON-RPC interface which we can use to send JSON-RPC requests. We looked mainly at how to do read-only requests... basically just requests that ask the Ethereum computer for data. We are only reading from the ledger at this point. What about writing?
+
+The vehicle to "write", or change the state of the Ethereum computer, is the transaction. Let's dive in...
+
+Ethereum = A Transaction-Based State Machine
+First of all, let's get it straight: the Ethereum computer lives and breathes transactions. They are the only vehicles that can actually change any state in the computer, as show in the diagram below.
+
